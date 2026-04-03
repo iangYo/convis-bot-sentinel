@@ -1,0 +1,13 @@
+services:
+  sentinela:
+    build: .
+    container_name: convis-bot-sentinel
+    environment:
+      - BASE_URL=${BASE_URL}
+      - LOGIN_CPF=${LOGIN_CPF}
+      - LOGIN_CARTEIRINHA=${LOGIN_CARTEIRINHA}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+    volumes:
+      - ./sentinel.py:/app/sentinel.py
+    restart: unless-stopped
