@@ -11,3 +11,19 @@ services:
     volumes:
       - ./sentinel.py:/app/sentinel.py
     restart: unless-stopped
+    depends_on:
+      - worker
+
+  worker:
+    build: ./worker
+    container_name: convis-bot-worker
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+    ports:
+      - "8787:8787"
+    volumes:
+      - ./worker/src:/app/src
+      - worker_state:/app/.wrangler/state
+
+volumes:
+  worker_state:
