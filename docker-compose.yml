@@ -1,6 +1,6 @@
 services:
-  sentinela:
-    build: .
+  sentinel:
+    build: ./scraper
     container_name: convis-bot-sentinel
     environment:
       - BASE_URL=${BASE_URL}
