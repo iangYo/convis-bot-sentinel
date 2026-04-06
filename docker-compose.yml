@@ -1,5 +1,5 @@
 services:
-  sentinel:
+  scraper:
     build: ./scraper
     container_name: convis-bot-sentinel
     environment:
@@ -8,8 +8,11 @@ services:
       - LOGIN_CARTEIRINHA=${LOGIN_CARTEIRINHA}
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
       - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+      - TARGET_SECTOR=${TARGET_SECTOR}
+      - TARGET_CELL=${TARGET_CELL}
+      - WORKER_URL=http://worker:8787
     volumes:
-      - ./sentinel.py:/app/sentinel.py
+      - ./scraper:/app/
     restart: unless-stopped
     depends_on:
       - worker

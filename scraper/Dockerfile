@@ -4,8 +4,10 @@ WORKDIR /app
 
 COPY requirements.txt .
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
 COPY sentinel.py .
+COPY visit_checker.py .
 
-CMD ["python", "sentinel.py"]
+CMD ["python", "-u", "sentinel.py"]
