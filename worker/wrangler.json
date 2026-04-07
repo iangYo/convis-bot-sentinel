@@ -2,6 +2,9 @@
   "name": "convis-bot-worker",
   "main": "src/index.ts",
   "compatibility_date": "2026-04-03",
+  "triggers": {
+    "crons": ["0 20 * * *", "30 20 * * *", "0 21 * * *"]
+  },
   "kv_namespaces": [
     {
       "binding": "CONVIS_BOT_SENTINEL",

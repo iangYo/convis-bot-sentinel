@@ -21,7 +21,11 @@ services:
     build: ./worker
     container_name: convis-bot-worker
     environment:
+      - BASE_URL=${BASE_URL}
+      - LOGIN_CPF=${LOGIN_CPF}
+      - LOGIN_CARTEIRINHA=${LOGIN_CARTEIRINHA}
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
     ports:
       - "8787:8787"
     volumes:

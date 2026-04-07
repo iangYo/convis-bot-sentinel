@@ -1,11 +1,16 @@
 import { MESSAGES } from "./config/constants.js";
 import { handleGetRequest } from "./handlers/get-handler.js";
 import { handlePostRequest } from "./handlers/post-handler.js";
+import { handleSentinelCheck } from "./handlers/sentinel-handler.js";
 import { StorageRepository } from "./infrastructure/storage.js";
 import { TelegramClient } from "./infrastructure/telegram.js";
 
 interface Env {
   TELEGRAM_BOT_TOKEN: string;
+  TELEGRAM_CHAT_ID: string;
+  BASE_URL: string;
+  LOGIN_CPF: string;
+  LOGIN_CARTEIRINHA: string;
   CONVIS_BOT_SENTINEL: KVNamespace;
 }
 
@@ -33,5 +38,17 @@ export default {
       console.error("Error processing request:", error);
       return new Response(MESSAGES.INTERNAL_ERROR, { status: 500 });
     }
+  },
+
+  async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
+    const telegramClient = new TelegramClient(env.TELEGRAM_BOT_TOKEN);
+    const credentials = {
+      cpf: env.LOGIN_CPF,
+      cardNumber: env.LOGIN_CARTEIRINHA,
+    };
+
+    ctx.waitUntil(
+      handleSentinelCheck(env.BASE_URL, credentials, telegramClient, env.TELEGRAM_CHAT_ID)
+    );
   },
 };

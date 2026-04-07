@@ -2,64 +2,19 @@ name: 🤖 Convis Bot Automation
 
 env:
   BASE_URL: ${{ secrets.BASE_URL }}
-  LOGIN_CPF: ${{ secrets.LOGIN_CPF }}
-  LOGIN_CARTEIRINHA: ${{ secrets.LOGIN_CARTEIRINHA }}
   TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
   TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
 on:
   schedule:
-    # Sentinel: Friday 4pm São Paulo time (7pm UTC)
+    # Visit Checker: Every Friday 4pm São Paulo time (7pm UTC)
     - cron: "0 19 * * 5"
-
-    # Visit Checker: Every day 5-6 PM São Paulo time (8-9 PM UTC), every 15 min
-    - cron: "0 20 * * *" # 5:00 PM São Paulo
-    - cron: "15 20 * * *" # 5:15 PM São Paulo
-    - cron: "30 20 * * *" # 5:30 PM São Paulo
-    - cron: "45 20 * * *" # 5:45 PM São Paulo
-    - cron: "0 21 * * *" # 6:00 PM São Paulo
   workflow_dispatch:
-    inputs:
-      script:
-        description: "Which script to run"
-        required: true
-        type: choice
-        options:
-          - sentinel
-          - visit_checker
-          - both
-        default: "both"
 
 jobs:
-  sentinel:
-    name: 🔍 Button Surveillance
-    runs-on: ubuntu-latest
-    if: |
-      (github.event_name == 'schedule' && github.event.schedule != '0 19 * * 5') ||
-      (github.event_name == 'workflow_dispatch' && 
-       (github.event.inputs.script == 'sentinel' || github.event.inputs.script == 'both'))
-    steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v3
-
-      - name: 🐍 Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.11"
-
-      - name: 📦 Install dependencies
-        run: pip install --no-cache-dir -r scraper/requirements.txt
-
-      - name: 🏃‍♂️ Run Sentinel
-        run: python scraper/sentinel.py
-
   visit_checker:
     name: 📅 Visit Availability Check
     runs-on: ubuntu-latest
-    if: |
-      (github.event_name == 'schedule' && github.event.schedule == '0 19 * * 5') ||
-      (github.event_name == 'workflow_dispatch' && 
-       (github.event.inputs.script == 'visit_checker' || github.event.inputs.script == 'both'))
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v3
