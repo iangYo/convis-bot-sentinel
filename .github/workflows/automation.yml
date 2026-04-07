@@ -35,7 +35,7 @@ jobs:
     name: 🔍 Button Surveillance
     runs-on: ubuntu-latest
     if: |
-      (github.event_name == 'schedule' && github.event.schedule == '0 19 * * 5') ||
+      (github.event_name == 'schedule' && github.event.schedule != '0 19 * * 5') ||
       (github.event_name == 'workflow_dispatch' && 
        (github.event.inputs.script == 'sentinel' || github.event.inputs.script == 'both'))
     steps:
@@ -57,7 +57,7 @@ jobs:
     name: 📅 Visit Availability Check
     runs-on: ubuntu-latest
     if: |
-      (github.event_name == 'schedule' && github.event.schedule != '0 19 * * 5') ||
+      (github.event_name == 'schedule' && github.event.schedule == '0 19 * * 5') ||
       (github.event_name == 'workflow_dispatch' && 
        (github.event.inputs.script == 'visit_checker' || github.event.inputs.script == 'both'))
     steps:
