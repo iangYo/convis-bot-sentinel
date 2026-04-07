@@ -29,4 +29,12 @@ export class StorageRepository {
     const value = await this.kv.get(key);
     return value === "true";
   }
+
+  async get(key: string): Promise<string | null> {
+    return await this.kv.get(key);
+  }
+
+  async put(key: string, value: string): Promise<void> {
+    await this.kv.put(key, value);
+  }
 }

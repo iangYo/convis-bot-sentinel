@@ -42,13 +42,20 @@ export default {
 
   async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
     const telegramClient = new TelegramClient(env.TELEGRAM_BOT_TOKEN);
+    const storageRepository = new StorageRepository(env.CONVIS_BOT_SENTINEL);
     const credentials = {
       cpf: env.LOGIN_CPF,
       cardNumber: env.LOGIN_CARTEIRINHA,
     };
 
     ctx.waitUntil(
-      handleSentinelCheck(env.BASE_URL, credentials, telegramClient, env.TELEGRAM_CHAT_ID)
+      handleSentinelCheck(
+        env.BASE_URL,
+        credentials,
+        telegramClient,
+        env.TELEGRAM_CHAT_ID,
+        storageRepository
+      )
     );
   },
 };
