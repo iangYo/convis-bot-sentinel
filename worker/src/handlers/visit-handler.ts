@@ -19,6 +19,7 @@ export async function handleVisitCheck(
   targetCell: string,
   telegramClient: TelegramClient,
   chatId: string,
+  notifyIfNotFound = false,
 ): Promise<void> {
   console.log("Checking next available visit...");
 
@@ -27,6 +28,12 @@ export async function handleVisitCheck(
 
   if (!visitInfo) {
     console.log("No matching visit found for the given sector/cell.");
+    if (notifyIfNotFound) {
+      await telegramClient.sendMessage(
+        parseInt(chatId),
+        "❌ Nenhuma visita disponível encontrada para o setor/cela configurados.",
+      );
+    }
     return;
   }
 

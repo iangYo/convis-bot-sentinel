@@ -16,7 +16,7 @@ export async function handlePostRequest(
   telegramClient: TelegramClient,
   storageRepository: StorageRepository,
   update: unknown,
-  visitConfig: VisitConfig
+  visitConfig: VisitConfig,
 ): Promise<void> {
   const telegramUpdate = new TelegramUpdate(update as any);
 
@@ -38,7 +38,8 @@ export async function handlePostRequest(
         visitConfig.targetSector,
         visitConfig.targetCell,
         telegramClient,
-        String(chatId)
+        String(chatId),
+        true,
       );
     }
     return;
@@ -52,14 +53,7 @@ export async function handlePostRequest(
     const callbackId = telegramUpdate.getCallbackId();
 
     if (callbackData && chatId && messageId !== undefined && callbackId) {
-      await handleToggleCallback(
-        telegramClient,
-        storageRepository,
-        callbackData,
-        chatId,
-        messageId,
-        callbackId
-      );
+      await handleToggleCallback(telegramClient, storageRepository, callbackData, chatId, messageId, callbackId);
     }
     return;
   }
