@@ -1,4 +1,3 @@
-import { MESSAGES } from "../config/constants.js";
 import { VisitConfig, VisitInfo } from "../domain/visit-models.js";
 import { TelegramClient } from "../infrastructure/telegram.js";
 import { fetchAndParseVisit } from "../usecases/visit-checker.js";
@@ -28,7 +27,10 @@ export async function handleVisitCheck(
   if (!visitInfo) {
     console.log("No matching visit found for the given sector/cell.");
     if (replyOnNotFound) {
-      await telegramClient.sendMessage(chatId, MESSAGES.NO_VISIT_FOUND);
+      const noVisitMessage =
+        `❌ *Nenhuma visita disponível encontrada.*\n\n` +
+        `📍 *Endereço configurado:* ${visitConfig.targetSector} - ${visitConfig.targetCell}\n`;
+      await telegramClient.sendMessage(chatId, noVisitMessage);
     }
     return;
   }
