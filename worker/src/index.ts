@@ -2,8 +2,11 @@ import { MESSAGES } from "./config/constants.js";
 import { handleGetRequest } from "./handlers/get-handler.js";
 import { handlePostRequest } from "./handlers/post-handler.js";
 import { handleSentinelCheck } from "./handlers/sentinel-handler.js";
+import { handleVisitCheck } from "./handlers/visit-handler.js";
 import { StorageRepository } from "./infrastructure/storage.js";
 import { TelegramClient } from "./infrastructure/telegram.js";
+
+const VISIT_CHECKER_CRON = "0 19 * * 5";
 
 interface Env {
   TELEGRAM_BOT_TOKEN: string;
@@ -11,6 +14,8 @@ interface Env {
   BASE_URL: string;
   LOGIN_CPF: string;
   LOGIN_CARTEIRINHA: string;
+  TARGET_SECTOR: string;
+  TARGET_CELL: string;
   CONVIS_BOT_SENTINEL: KVNamespace;
 }
 
@@ -42,6 +47,14 @@ export default {
 
   async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
     const telegramClient = new TelegramClient(env.TELEGRAM_BOT_TOKEN);
+
+    if (event.cron === VISIT_CHECKER_CRON) {
+      ctx.waitUntil(
+        handleVisitCheck(env.BASE_URL, env.TARGET_SECTOR, env.TARGET_CELL, telegramClient, env.TELEGRAM_CHAT_ID),
+      );
+      return;
+    }
+
     const storageRepository = new StorageRepository(env.CONVIS_BOT_SENTINEL);
     const credentials = {
       cpf: env.LOGIN_CPF,
@@ -49,13 +62,7 @@ export default {
     };
 
     ctx.waitUntil(
-      handleSentinelCheck(
-        env.BASE_URL,
-        credentials,
-        telegramClient,
-        env.TELEGRAM_CHAT_ID,
-        storageRepository
-      )
+      handleSentinelCheck(env.BASE_URL, credentials, telegramClient, env.TELEGRAM_CHAT_ID, storageRepository),
     );
   },
 };

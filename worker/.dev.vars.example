@@ -3,3 +3,5 @@ TELEGRAM_CHAT_ID=your_chat_id_here
 BASE_URL=your_base_url
 LOGIN_CPF=your_cpf_here
 LOGIN_CARTEIRINHA=your_carteirinha_here
+TARGET_SECTOR=PDF IV - 4 - A (SEGURO SEXUAL)
+TARGET_CELL=06
