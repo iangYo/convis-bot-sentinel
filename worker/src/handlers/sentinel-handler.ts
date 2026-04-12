@@ -40,11 +40,10 @@ export async function handleSentinelCheck(
       console.log("ALERT: Button is enabled! Sending notification...");
 
       const message =
-        "BOT EM TESTES, IGNORE ESTA MENSAGEM\n" +
-        "⚔️ RELATÓRIO DE VIGILÂNCIA\n" +
-        "Status do Botão: LIBERADO\n" +
-        "Ação Requerida: O robô detectou que o botão não está mais desabilitado. " +
-        "Entre no sistema imediatamente para evitar ineficiências.";
+        "⚔️ *RELATÓRIO DE VIGILÂNCIA*\n\n" +
+        "🟢 *Status do Botão:* LIBERADO\n\n" +
+        "🚨 *Ação Requerida:*\n" +
+        "A emissão de senha já está disponível! Acesse o sistema agora e realize o agendamento.";
 
       await telegramClient.sendMessage(parseInt(chatId), message);
 
