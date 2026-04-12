@@ -1,6 +1,7 @@
 export const COMMANDS = {
   MENU: "/menu",
   NEXT_VISIT: "/proxima_visita",
+  CURRENT_ADDRESS: "/endereco_atual",
 } as const;
 
 export const CALLBACK_ACTIONS = {

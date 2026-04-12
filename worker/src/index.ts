@@ -27,11 +27,20 @@ export default {
     try {
       if (request.method === "POST") {
         const update = await request.json();
-        await handlePostRequest(telegramClient, storageRepository, update, {
-          baseUrl: env.BASE_URL,
-          targetSector: env.TARGET_SECTOR,
-          targetCell: env.TARGET_CELL,
-        });
+        await handlePostRequest(
+          telegramClient,
+          storageRepository,
+          update,
+          {
+            baseUrl: env.BASE_URL,
+            targetSector: env.TARGET_SECTOR,
+            targetCell: env.TARGET_CELL,
+          },
+          {
+            cpf: env.LOGIN_CPF,
+            cardNumber: env.LOGIN_CARTEIRINHA,
+          },
+        );
         return new Response("OK", { status: 200 });
       }
 
@@ -57,8 +66,8 @@ export default {
         handleVisitCheck(
           { baseUrl: env.BASE_URL, targetSector: env.TARGET_SECTOR, targetCell: env.TARGET_CELL },
           telegramClient,
-          parseInt(env.TELEGRAM_CHAT_ID)
-        )
+          parseInt(env.TELEGRAM_CHAT_ID),
+        ),
       );
       return;
     }

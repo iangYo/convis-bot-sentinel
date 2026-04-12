@@ -1,8 +1,10 @@
 import { COMMANDS } from "../config/constants.js";
 import { TelegramUpdate } from "../domain/models.js";
+import { Credentials } from "../domain/sentinel-models.js";
 import { VisitConfig } from "../domain/visit-models.js";
 import { StorageRepository } from "../infrastructure/storage.js";
 import { TelegramClient } from "../infrastructure/telegram.js";
+import { loginAndGetAddress } from "../usecases/address-checker.js";
 import { handleMenuCommand } from "../usecases/handle-menu-command.js";
 import { handleToggleCallback } from "../usecases/handle-toggle-callback.js";
 import { handleVisitCheck } from "./visit-handler.js";
@@ -12,6 +14,7 @@ export async function handlePostRequest(
   storageRepository: StorageRepository,
   update: unknown,
   visitConfig: VisitConfig,
+  credentials: Credentials,
 ): Promise<void> {
   const telegramUpdate = new TelegramUpdate(update as any);
 
@@ -29,6 +32,17 @@ export async function handlePostRequest(
     const chatId = telegramUpdate.getChatId();
     if (chatId) {
       await handleVisitCheck(visitConfig, telegramClient, chatId, true);
+    }
+    return;
+  }
+
+  // Handle /endereco_atual command
+  if (telegramUpdate.isCommand(COMMANDS.CURRENT_ADDRESS)) {
+    const chatId = telegramUpdate.getChatId();
+    if (chatId) {
+      const address = await loginAndGetAddress(visitConfig.baseUrl, credentials);
+      const message = `📍 *ENDEREÇO ATUAL*\n\n` + `🏛️ *Lotação:* ${address}`;
+      await telegramClient.sendMessage(chatId, message);
     }
     return;
   }
