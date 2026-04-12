@@ -1,5 +1,6 @@
 export const COMMANDS = {
   MENU: "/menu",
+  NEXT_VISIT: "/proxima_visita",
 } as const;
 
 export const CALLBACK_ACTIONS = {

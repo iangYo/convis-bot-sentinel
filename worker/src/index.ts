@@ -27,7 +27,11 @@ export default {
     try {
       if (request.method === "POST") {
         const update = await request.json();
-        await handlePostRequest(telegramClient, storageRepository, update);
+        await handlePostRequest(telegramClient, storageRepository, update, {
+          baseUrl: env.BASE_URL,
+          targetSector: env.TARGET_SECTOR,
+          targetCell: env.TARGET_CELL,
+        });
         return new Response("OK", { status: 200 });
       }
 
