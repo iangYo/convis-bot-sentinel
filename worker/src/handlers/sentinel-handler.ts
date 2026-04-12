@@ -1,9 +1,8 @@
+import { STORAGE_KEYS } from "../config/constants.js";
 import { Credentials } from "../domain/sentinel-models.js";
 import { StorageRepository } from "../infrastructure/storage.js";
 import { TelegramClient } from "../infrastructure/telegram.js";
 import { loginAndCheckButton } from "../usecases/sentinel-checker.js";
-
-const NOTIFICATION_DATE_KEY = "DATA_NOTIFICACAO_BOTAO_ATIVO";
 
 function getCurrentDateInSaoPaulo(): string {
   const now = new Date();
@@ -26,7 +25,7 @@ export async function handleSentinelCheck(
     console.log(`Current date in São Paulo: ${currentDate}`);
 
     // Check if already notified today
-    const lastNotificationDate = await storageRepository.get(NOTIFICATION_DATE_KEY);
+    const lastNotificationDate = await storageRepository.get(STORAGE_KEYS.NOTIFICATION_DATE);
 
     if (lastNotificationDate === currentDate) {
       console.log("Already notified today. Aborting execution.");
@@ -50,7 +49,7 @@ export async function handleSentinelCheck(
       await telegramClient.sendMessage(parseInt(chatId), message);
 
       // Update last notification date
-      await storageRepository.put(NOTIFICATION_DATE_KEY, currentDate);
+      await storageRepository.put(STORAGE_KEYS.NOTIFICATION_DATE, currentDate);
       console.log("Notification sent and date saved!");
     } else {
       console.log("All normal. Button is disabled.");

@@ -25,11 +25,6 @@ export class StorageRepository {
     return newValue === "true";
   }
 
-  async getItemValue(key: string): Promise<boolean> {
-    const value = await this.kv.get(key);
-    return value === "true";
-  }
-
   async get(key: string): Promise<string | null> {
     return await this.kv.get(key);
   }

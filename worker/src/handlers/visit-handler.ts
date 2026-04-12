@@ -1,4 +1,5 @@
-import { VisitInfo } from "../domain/visit-models.js";
+import { MESSAGES } from "../config/constants.js";
+import { VisitConfig, VisitInfo } from "../domain/visit-models.js";
 import { TelegramClient } from "../infrastructure/telegram.js";
 import { fetchAndParseVisit } from "../usecases/visit-checker.js";
 
@@ -14,30 +15,25 @@ function createVisitMessage(info: VisitInfo): string {
 }
 
 export async function handleVisitCheck(
-  baseUrl: string,
-  targetSector: string,
-  targetCell: string,
+  visitConfig: VisitConfig,
   telegramClient: TelegramClient,
-  chatId: string,
-  notifyIfNotFound = false,
+  chatId: number,
+  replyOnNotFound = false,
 ): Promise<void> {
   console.log("Checking next available visit...");
 
-  const calendarUrl = `${baseUrl}/diasdevisita.xhtml`;
-  const visitInfo = await fetchAndParseVisit(calendarUrl, targetSector, targetCell);
+  const calendarUrl = `${visitConfig.baseUrl}/diasdevisita.xhtml`;
+  const visitInfo = await fetchAndParseVisit(calendarUrl, visitConfig.targetSector, visitConfig.targetCell);
 
   if (!visitInfo) {
     console.log("No matching visit found for the given sector/cell.");
-    if (notifyIfNotFound) {
-      await telegramClient.sendMessage(
-        parseInt(chatId),
-        "❌ Nenhuma visita disponível encontrada para o setor/cela configurados.",
-      );
+    if (replyOnNotFound) {
+      await telegramClient.sendMessage(chatId, MESSAGES.NO_VISIT_FOUND);
     }
     return;
   }
 
   console.log(`Visit found: ${visitInfo.date} at ${visitInfo.entryTime}`);
-  await telegramClient.sendMessage(parseInt(chatId), createVisitMessage(visitInfo));
+  await telegramClient.sendMessage(chatId, createVisitMessage(visitInfo));
   console.log("Visit notification sent.");
 }

@@ -54,7 +54,11 @@ export default {
 
     if (event.cron === VISIT_CHECKER_CRON) {
       ctx.waitUntil(
-        handleVisitCheck(env.BASE_URL, env.TARGET_SECTOR, env.TARGET_CELL, telegramClient, env.TELEGRAM_CHAT_ID),
+        handleVisitCheck(
+          { baseUrl: env.BASE_URL, targetSector: env.TARGET_SECTOR, targetCell: env.TARGET_CELL },
+          telegramClient,
+          parseInt(env.TELEGRAM_CHAT_ID)
+        )
       );
       return;
     }

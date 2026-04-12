@@ -13,6 +13,7 @@ export const STORAGE_KEYS = {
   FOOD: "food",
   HYGIENE: "hygiene",
   BAG: "bag",
+  NOTIFICATION_DATE: "DATA_NOTIFICACAO_BOTAO_ATIVO",
 } as const;
 
 export const ITEM_LABELS = {
@@ -27,6 +28,7 @@ export const MESSAGES = {
     `Aqui está como o robô está configurado neste exato momento.\n\n` +
     `**Legenda:**\n` +
     `👇 *Toque nos botões abaixo para ligar ou desligar as opções:*`,
+  NO_VISIT_FOUND: "❌ Nenhuma visita disponível encontrada para o setor e cela configurados.",
   ACCESS_DENIED: "Acesso negado.",
   INTERNAL_ERROR: "Erro interno",
 } as const;
